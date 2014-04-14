@@ -8,9 +8,13 @@
 number = rand(10)
 guess = -1
 
+puts "Guess the number (0-9)"
+
 until guess == number
-        puts "Guess the number (0-9)"
         guess = (gets).to_i
+
+        puts 'Too low!' if guess < number
+        puts 'Too high!' if guess > number
 end
 
 puts "Congrats! #{guess} was the secret number!"
