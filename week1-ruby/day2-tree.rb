@@ -2,8 +2,15 @@ class Tree
   attr_accessor :children, :node_name
 
   def initialize(treedef = {})
-    @node_name = name
-    @children = Tree.new treedef.first
+    # Add artificial root when hash contains > 1 entry
+    treedef = { 'root' => treedef } if treedef.length > 1
+
+    # Should always be only one entry
+    @node_name = treedef.keys.first
+    @children = []
+    treedef[@node_name].each do |name,children|
+       @children.push Tree.new name => children   
+    end
   end
 
   def visit_all(&block)
@@ -16,9 +23,22 @@ class Tree
   end
 end
 
-ruby_tree = Tree.new( "root", 
-                     [Tree.new( "foo" ),
-                      Tree.new( "bar" )])
+ruby_tree = Tree.new({
+  'foo'=> { 
+    'bar' => { 
+      'baz' => {}, 
+      'quux0' => {}, 
+      'quux1' => {
+        'brax' => {}
+      }, 
+      'quux2' => {}, 
+      'quux3' => {}, 
+      'quux4' => {}, 
+    }, 
+    'blipp' => {}
+  },
+  'braxen' => {}
+})
 
 puts 'Visiting a node'
 ruby_tree.visit { |node| puts node.node_name }
