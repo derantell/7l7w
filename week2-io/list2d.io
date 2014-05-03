@@ -1,7 +1,10 @@
 List2d := Object clone
 
-List2d dim := method( x, y,
+List2d init := method(
         self dimarray := List clone 
+)
+
+List2d dim := method( x, y,
         dimarray setSize(x) foreach ( i, _, 
               dimarray atPut(i, List clone setSize(y))
         )
@@ -25,7 +28,17 @@ List2d transpose := method(
         result
 )
 
-List2d dump := method ( 
+List2d save := method(
+        File with("./matrix") open setContents(dimarray serialized) close
+        self
+)
+
+List2d load := method(
+        self dimarray = doFile( "./matrix")
+        self
+)
+
+List2d dump := method ( pretty,
         "-" repeated(30) println 
         self dimarray foreach( arr, arr map( asString alignLeft(10," ")) join(", ") println) 
         "-" repeated(30) println 
@@ -42,3 +55,7 @@ mylist dump
 otherList := mylist transpose
 otherList dump
 
+otherList save
+
+thirdList := List2d clone
+thirdList load dump 
